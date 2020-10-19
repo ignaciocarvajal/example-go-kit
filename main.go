@@ -5,18 +5,22 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+
+	_ "github.com/lib/pq"
+
+	"github.com/go-kit/kit/log"
+
+	"github.com/go-kit/kit/log/level"
+
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
-	"github.com/ignaciocarvajal/example-go-kit/account"
-	_ "github.com/lib/pq"
+	"gokit-example/account"
 )
 
-const dbsource = "postgressql://postgres:postgres@localhost:5432/gokitexample?sslmode=disable"
+const dbsource = "postgresql://postgres:postgres@localhost:5432/gokitexample?sslmode=disable"
 
 func main() {
 	var httpAddr = flag.String("http", ":8080", "http listen address")
@@ -25,8 +29,8 @@ func main() {
 		logger = log.NewLogfmtLogger(os.Stderr)
 		logger = log.NewSyncLogger(logger)
 		logger = log.With(logger,
-			"servie", "account",
-			"time", log.DefaultTimestampUTC,
+			"service", "account",
+			"time:", log.DefaultTimestampUTC,
 			"caller", log.DefaultCaller,
 		)
 	}
@@ -71,5 +75,5 @@ func main() {
 		errs <- http.ListenAndServe(*httpAddr, handler)
 	}()
 
-	level.Error(logger).Log("exit", errs)
+	level.Error(logger).Log("exit", <-errs)
 }
