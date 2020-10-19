@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/ignaciocarvajal/example-go-kit/account"
 	_ "github.com/lib/pq"
 
 	"github.com/go-kit/kit/log"
@@ -16,8 +17,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
-	"gokit-example/account"
 )
 
 const dbsource = "postgresql://postgres:postgres@localhost:5432/gokitexample?sslmode=disable"
